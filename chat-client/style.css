@@ -1,0 +1,286 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, sans-serif;
+    background-color: #F6F6F2;
+    padding: 20px 0px;
+}
+
+#app {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
+h1 {
+    padding: 0;
+    margin: 0;
+}
+
+#header-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-bottom: 2px solid;
+}
+
+#body-section {
+    display: grid;
+    grid-template-columns: 25% 1fr;
+    overflow: auto;
+}
+
+/*#body-section > * {*/
+/*    margin: 0px 10px 0px 10px;*/
+/*}*/
+
+#left-section {
+    border-right: 2px solid;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+#top-left-section {
+    padding-bottom: 20px;
+    padding-left:20px;
+    border-bottom: 2px solid;
+}
+
+#top-right-section {
+    border-bottom: 2px solid;
+}
+
+#right-section {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: auto;
+}
+
+#right-section > * {
+    padding: 0 20px;
+}
+
+#bottom-right-section {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    overflow: auto;
+}
+
+#send-message {
+    display: flex;
+    padding-top:10px;
+    border-top: 1px solid;
+}
+
+#send-message form {
+    display: flex;
+    width: 100%;
+}
+
+#send-message input[type="submit"] {
+    margin-left: 10px;
+}
+
+#message-box {
+    flex: 1;
+}
+
+.edit-name-button {
+    margin-left: 5px;
+}
+
+button {
+    margin: 0px 5px;
+    font-size: 14px;
+}
+
+#bottom-left-section {
+    overflow-y: auto;
+    padding: 0px;
+}
+
+#actor-id p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#actor-id label {
+    margin-right: 10px;
+}
+
+#actor-id input {
+    flex: 1;
+}
+
+input {
+    font-size:15px;
+}
+
+.error {
+    color: red;
+}
+
+.not-error {
+    color: green;
+}
+
+.error, .not-error {
+    margin: 15px 0px 0px 0px;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.message-item, .message-list {
+    list-style: none inside none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.message-item {
+    padding: 12px 20px;
+    background-color: rgba(0, 0, 0, 0.08);
+    margin-bottom: 10px;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.message-item li {
+    line-height: 21px;
+}
+
+.edit-delete-buttons {
+    padding-top: 8px;
+    padding-bottom: 5px;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: auto;
+}
+
+.message-box {
+    margin-bottom: 10px;
+}
+
+.message-item.me {
+    background-color: #0078ff;
+    color: #ffffff;
+    margin-left: auto;
+    border-bottom-right-radius: 0;
+}
+
+.message-item.other {
+    background-color: #d5d5d5;
+    color: #000000;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+}
+
+.usernames {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.username-btn {
+    width: 100%;
+    text-align: left;
+    padding: 24px 20px;
+    background-color: rgba(241, 241, 241, 0.12);
+    border: none;
+    cursor: pointer;
+    outline: none;
+    border-bottom: 0.5px solid;
+    line-height: 23px;
+    font-size:15px;
+
+}
+
+.username-btn:hover {
+    background-color: #ddd;
+}
+
+#bottom-left-section h3 {
+    padding-left: 20px;
+    padding-top: 10px;
+    line-height: 60px;
+    border-bottom: 0.5px solid;
+    margin: 0px;
+}
+
+#username-request-error {
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.error-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+}
+
+#username-request-button {
+    margin-left: 8px;
+}
+
+.loading {
+    font-size: 13.5px;
+    padding: 0;
+    margin: 0;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+.loading {
+    margin-left: 10px;
+}
+
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #646e75;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    animation: spin 2s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#recipient-username {
+    margin: 0px 1px 0px 5px;
+}
+
