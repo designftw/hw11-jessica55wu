@@ -30,14 +30,6 @@
           <p>
             <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
             <!-- See below for the template. -->
-            <b>Profile Pic:</b> <profile :actor="$gf.me" :editable="true"></profile>
-            <input type="file" accept="image/*" id="profile-upload" name="profile-upload"/> <br>
-            <img class="profile-pic-example" src="profile_pic.png" />
-          </p>
-
-          <p>
-            <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
-            <!-- See below for the template. -->
             <b>Display Name:</b> <name :actor="$gf.me" :editable="true"></name>
           </p>
 
@@ -50,6 +42,14 @@
             <p v-if="usernameRequestError" id="username-request-error" class="error">{{ usernameRequestError }}</p>
             <p v-if="usernameRequestFeedback" class="not-error">{{ usernameRequestFeedback }}</p>
           </div>
+
+          <p>
+            <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
+            <!-- See below for the template. -->
+            <b>Profile Pic:</b> <profile :actor="$gf.me" :editable="true"></profile>
+            <input type="file" accept="image/*" id="profile-upload" name="profile-upload"/> <br>
+            <img class="profile-pic-example" src="profile_pic.png" />
+          </p>
         </div>
 
         <div id="bottom-left-section">

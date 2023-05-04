@@ -253,7 +253,14 @@ const app = {
       } catch (error) {
         console.error('Error requesting username:', error);
         this.usernameRequestError = 'Failed to request username. Please try again.';
-        // window.alert('Cannot request this username!');
+        this.usernameInputTouched = true;
+        this.$nextTick(() => {
+          const input = document.querySelector('input');
+          input.classList.add('error-shake');
+          setTimeout(() => {
+            input.classList.remove('error-shake');
+          }, 500);
+        });
       }
     },
 
