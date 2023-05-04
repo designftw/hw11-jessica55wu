@@ -46,6 +46,7 @@ const app = {
       loadingIndicator: false,
       allUsernames: [],
       file: null,
+      downloadedImages: {},
     }
   },
 
@@ -111,6 +112,31 @@ const app = {
       },
       immediate: true,
     },
+    messages(messages) {
+      // Your code here
+      const newImageMessages = messages.filter(
+          (message) =>
+              message.attachment &&
+              typeof message.attachment === 'object' &&
+              message.attachment.type === 'Image' &&
+              typeof message.attachment.magnet === 'string'
+      );
+
+      newImageMessages.forEach(async (message) => {
+        const magnet = message.attachment.magnet;
+        if (!this.downloadedImages[magnet]) {
+          console.log('New image message:', message);
+
+          try {
+            const imageBlob = await this.$gf.media.fetch(magnet);
+            const imageUrl = URL.createObjectURL(imageBlob);
+            this.downloadedImages[magnet] = imageUrl;
+          } catch (error) {
+            console.error('Failed to download image:', error);
+          }
+        }
+      });
+    },
   },
 
   methods: {
@@ -120,9 +146,6 @@ const app = {
       const message = {
         type: 'Note',
         content: this.messageText,
-        published: new Date().toISOString(),
-        attributedTo: this.actor,
-        to: this.inbox,
       };
 
       if (this.file) {
@@ -132,19 +155,26 @@ const app = {
             type: 'Image',
             magnet: magnetURI,
           };
-          // Delete the cached file
-          this.file = null;
+          message.content = 'attached image'
         } catch (error) {
           console.error('Failed to upload the image:', error);
           return;
         }
       }
 
-      this.$gf.chat.postMessage(this.inbox, message);
+      if (this.privateMessaging) {
+        message.bto = [this.recipient]
+        message.context = [this.$gf.me, this.recipient]
+      } else {
+        message.context = [this.channel]
+      }
+
+      this.$gf.post(message)
       this.messageText = '';
+      this.file = null;
     },
 
-    onImageAttachment(event) {
+    onImageInput(event) {
       this.file = event.target.files[0];
     },
 
@@ -295,7 +325,19 @@ const Name = {
   template: '#name'
 }
 
-app.components = { Name }
+const Like = {
+  props: ["messageid"],
+
+  template: '#like',
+
+  methods: {
+    sendLike() {
+      window.alert('Liked message:', this.messageid);
+    },
+  },
+};
+
+app.components = { Name, Like }
 Vue.createApp(app)
     .use(GraffitiPlugin(Vue))
     .mount('#app')

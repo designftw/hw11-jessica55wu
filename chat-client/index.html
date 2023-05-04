@@ -76,47 +76,28 @@
           <ul class="message-list">
             <!-- List all the messages -->
             <li v-for="message of messages" :key="message.id" class="message-box">
-
-              <div v-if="message.attachment">
-                {{ message.attachment }}
-              </div>
-
-              <!-- Display and edit form if we're editing a message -->
-              <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
-                <input v-model="editText">
-                <input type="submit" value="Save"/>
-              </form>
-
               <!-- Otherwise, display a bunch of properties from the message -->
               <ul class="message-item" :class="{'me': message.actor == $gf.me, 'other': message.actor != $gf.me}" v-else>
-                  <li>
-  <!--                  Message: {{ message.content }}-->
-                    {{ message.content }}
-                  </li>
-<!--                <li>-->
-<!--                  From Name: <name :actor="message.actor" :includeUsername="true"></name>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  From Actor ID: {{ message.actor }}-->
-<!--                </li>-->
-                <template v-if="privateMessaging">
-<!--                  <li>-->
-<!--                    To Name: <name :actor="message.bto[0]"></name>-->
-<!--                  </li>-->
-<!--                  <li>-->
-<!--                    To Actor ID: {{ message.bto[0] }}-->
-<!--                  </li>-->
-                </template>
+                <li>
+                  <div v-if="message.attachment">
+<!--                    <img :src="message.attachment.magnet" :alt="message.content" />-->
+                    <img class="image-files" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />
+                  </div>
+                  <div v-else> {{ message.content }} </div>
+                </li>
                 <li>
                   Published at Time: {{ message.published }}
                 </li>
                 <li>
                   Last Edited at Time: {{ message.updated }}
                 </li>
-<!--                <li>-->
-<!--                  &lt;!&ndash; This is a unique identifier that can be used to "link" to messages &ndash;&gt;-->
-<!--                  ID: {{ message.id }}-->
-<!--                </li>-->
+                <li>
+                  <!-- Display and edit form if we're editing a message -->
+                  <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
+                    <input v-model="editText">
+                    <input type="submit" value="Save"/>
+                  </form>
+                </li>
 
                 <!-- Only add these controls if the message is ours -->
                 <!-- You can't edit or delete other people's messages -->
@@ -130,6 +111,9 @@
                     </button>
                   </li>
                 </template>
+                <li>
+                  <like :messageid="message.id"></like>
+                </li>
               </ul>
             </li>
           </ul>
@@ -140,10 +124,7 @@
         <div id="send-message">
           <form @submit.prevent="sendMessage">
             <input id="message-box" v-model="messageText" placeholder="Type a message..." />
-            <div class="upload-container">
-              <input type="file" accept="image/*" id="image-upload" name="image-upload" @change="onImageAttachment" /> <br>
-              <label for="image-upload" class="upload-label">Upload Image</label>
-            </div>
+            <input type="file" accept="image/*" id="image-upload" name="image-upload" @change="onImageInput"/> <br>
             <input type="submit" value="Send" />
           </form>
         </div>
@@ -174,5 +155,10 @@
     <input type="submit" value="Save Name"/>
   </form>
 </template>
+
+<template id="like">
+  <button @click="sendLike">Like</button>
+</template>
+
 </body>
 </html>
