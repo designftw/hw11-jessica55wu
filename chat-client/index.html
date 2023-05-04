@@ -12,7 +12,7 @@
     </h1>
 
     <p>
-      <button @click="$gf.toggleLogIn">
+      <button id="login-button" @click="$gf.toggleLogIn">
         <!-- If we have a user ID, we're logged in so show "Log Out" -->
         <!-- Otherwise, show "Log In" -->
         {{ $gf.me? 'Log Out' : 'Log In' }}
@@ -148,7 +148,7 @@
           <form @submit.prevent="sendMessage">
             <input id="message-box" v-model="messageText" placeholder="Type a message..." />
             <input type="file" accept="image/*" id="image-upload" name="image-upload" @change="onImageInput"/> <br>
-            <input type="submit" value="Send" />
+            <input type="submit" value="Send" class="send-button" />
           </form>
         </div>
 

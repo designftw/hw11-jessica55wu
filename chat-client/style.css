@@ -85,6 +85,25 @@ h1 {
     width: 100%;
 }
 
+.send-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.send-button:hover, .send-button:active {
+    background-color: #3e8e41;
+    color: white;
+}
+
 #send-message input[type="submit"] {
     margin-left: 10px;
 }
@@ -310,4 +329,19 @@ input {
 .profile-pic-example {
     width: 50px;
     border-radius:100px;
+}
+
+#login-button {
+    background-color: #655652;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+#login-button:hover {
+    background-color: white;
+    color: #655652;
+    transform: scale(1.1);
 }
