@@ -46,6 +46,7 @@ const app = {
       loadingIndicator: false,
       allUsernames: [],
       file: null,
+      profile: null,
       downloadedImages: {},
     }
   },
@@ -182,6 +183,37 @@ const app = {
 
     onImageInput(event) {
       this.file = event.target.files[0];
+    },
+
+    // onProfileInput(event) {
+    //   this.profile = event.target.files[0];
+    //   // const magnetURI = await this.$gf.media.store(this.profile);
+    // },
+
+    async replyToMessage(replyContent, messageID) {
+
+      const message = {
+        type: 'Note',
+        content: replyContent,
+        inReplyTo: messageID,
+      };
+
+      if (this.privateMessaging) {
+        message.bto = [this.recipient]
+        message.context = [this.$gf.me, this.recipient]
+      } else {
+        message.context = [this.channel]
+      }
+
+      this.$gf.post(message)
+    },
+
+    getMessageSnippet(messageID) {
+      const originalMessage = this.messages.find((msg) => msg.id === messageID);
+      if (originalMessage) {
+        return originalMessage.content.slice(0, 30) + '...';
+      }
+      return '';
     },
 
     removeMessage(message) {

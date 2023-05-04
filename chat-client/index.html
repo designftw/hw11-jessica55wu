@@ -26,6 +26,15 @@
 
       <div id="left-section">
         <div id="top-left-section">
+
+          <p>
+            <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
+            <!-- See below for the template. -->
+            <b>Profile Pic:</b> <profile :actor="$gf.me" :editable="true"></profile>
+            <input type="file" accept="image/*" id="profile-upload" name="profile-upload"/> <br>
+            <img class="profile-pic-example" src="profile_pic.png" />
+          </p>
+
           <p>
             <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
             <!-- See below for the template. -->
@@ -77,7 +86,7 @@
             <!-- List all the messages -->
             <li v-for="message of messages" :key="message.id" class="message-box">
               <!-- Otherwise, display a bunch of properties from the message -->
-              <ul class="message-item" :class="{'me': message.actor == $gf.me, 'other': message.actor != $gf.me}" v-else>
+              <ul class="message-item" :class="{'me': message.actor == $gf.me, 'other': message.actor != $gf.me}">
                 <li>
                   <div v-if="message.attachment">
 <!--                    <img :src="message.attachment.magnet" :alt="message.content" />-->
@@ -99,6 +108,12 @@
                   </form>
                 </li>
 
+                <div v-if="message.inReplyTo">
+                  <span class="replied-to">
+                    Replied to: {{ getMessageSnippet(message.inReplyTo) }}
+                  </span>
+                </div>
+
                 <!-- Only add these controls if the message is ours -->
                 <!-- You can't edit or delete other people's messages -->
                 <template v-if="message.actor==$gf.me">
@@ -111,6 +126,14 @@
                     </button>
                   </li>
                 </template>
+
+                <div class="reply-form">
+                  <form @submit.prevent="replyToMessage(replyContent, message.id)">
+                    <input v-model="replyContent" type="text" placeholder="Reply" />
+                    <button type="submit">Send</button>
+                  </form>
+                </div>
+
                 <li>
                   <like :messageid="message.id"></like>
                 </li>
@@ -155,6 +178,13 @@
     <input type="submit" value="Save Name"/>
   </form>
 </template>
+
+<!--<template id="profile">-->
+
+<!--  <input type="file" accept="image/*" id="profile-upload" name="profile-upload" @change="onProfileInput"/> <br>-->
+<!--&lt;!&ndash;  <img class="profile" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />&ndash;&gt;-->
+
+<!--</template>-->
 
 <template id="like">
   <div class="heart" :class="{ liked: isLiked }" @click="toggleLike">
