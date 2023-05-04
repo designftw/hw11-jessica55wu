@@ -95,7 +95,13 @@ const app = {
           .sort((m1, m2)=> new Date(m2.published) - new Date(m1.published))
           // Only show the 10 most recent ones
           .slice(0,10)
-      // .slice(-10) // change this line
+          // Add the 'liked' property to each message
+          .map((message) => {
+            if (!('liked' in message)) {
+              message.liked = false;
+            }
+            return message;
+          });
     },
   },
 
@@ -328,13 +334,23 @@ const Name = {
 const Like = {
   props: ["messageid"],
 
-  template: '#like',
-
-  methods: {
-    sendLike() {
-      window.alert('Liked message:', this.messageid);
+  computed: {
+    message() {
+      return this.$root.messages.find((message) => message.id === this.messageid);
     },
   },
+
+  methods: {
+    toggleLike() {
+      this.message.liked = !this.message.liked;
+    },
+  },
+
+  template: `
+    <button @click="toggleLike">
+      {{ message.liked ? 'Unlike' : 'Like' }}
+    </button>
+  `,
 };
 
 app.components = { Name, Like }
