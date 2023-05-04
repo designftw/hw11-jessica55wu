@@ -287,3 +287,18 @@ input {
 .image-files {
     width: 300px;
 }
+
+.heart {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+.heart path {
+    fill: transparent;
+    stroke: #ffffff;
+    stroke-width: 2px;
+    transition: fill 0.2s ease-in-out;
+}
+.heart.liked path {
+    fill: #ffffff;
+}

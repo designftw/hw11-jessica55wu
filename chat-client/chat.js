@@ -97,10 +97,10 @@ const app = {
           .slice(0,10)
           // Add the 'liked' property to each message
           .map((message) => {
-            if (!('liked' in message)) {
-              message.liked = false;
-            }
-            return message;
+            return {
+              ...message,
+              liked: 'liked' in message ? message.liked : false,
+            };
           });
     },
   },
@@ -334,23 +334,23 @@ const Name = {
 const Like = {
   props: ["messageid"],
 
+  template: '#like',
+
   computed: {
-    message() {
-      return this.$root.messages.find((message) => message.id === this.messageid);
+    isLiked() {
+      const message = this.$root.messages.find((msg) => msg.id === this.messageid);
+      return message && message.liked;
     },
   },
 
   methods: {
     toggleLike() {
-      this.message.liked = !this.message.liked;
+      const message = this.$root.messages.find((msg) => msg.id === this.messageid);
+      if (message) {
+        message.liked = !message.liked;
+      }
     },
   },
-
-  template: `
-    <button @click="toggleLike">
-      {{ message.liked ? 'Unlike' : 'Like' }}
-    </button>
-  `,
 };
 
 app.components = { Name, Like }

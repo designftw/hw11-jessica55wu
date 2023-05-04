@@ -157,7 +157,13 @@
 </template>
 
 <template id="like">
-  <button @click="sendLike">Like</button>
+  <div class="heart" :class="{ liked: isLiked }" @click="toggleLike">
+    <svg viewBox="0 0 32 32">
+      <path
+              d="M16.228 28.787s-9.38-6.52-12.322-10.166c-3.283-4.073-1.364-9.11 3.073-9.41 2.82-.19 5.295 1.778 6.553 4.2 1.257-2.422 3.732-4.39 6.553-4.2 4.437.3 6.355 5.336 3.072 9.41-2.943 3.646-12.322 10.166-12.322 10.166z"
+      ></path>
+    </svg>
+  </div>
 </template>
 
 </body>
