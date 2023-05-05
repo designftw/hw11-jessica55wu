@@ -48,6 +48,7 @@ const app = {
       file: null,
       profile: null,
       downloadedImages: {},
+      replyContents: {},
     }
   },
 
@@ -190,7 +191,10 @@ const app = {
     //   // const magnetURI = await this.$gf.media.store(this.profile);
     // },
 
-    async replyToMessage(replyContent, messageID) {
+    async replyToMessage(messageID) {
+
+      const replyContent = this.replyContents[messageID];
+      if (!replyContent) return;
 
       const message = {
         type: 'Note',

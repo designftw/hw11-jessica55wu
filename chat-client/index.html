@@ -129,8 +129,8 @@
                 </template>
 
                 <div class="reply-form">
-                  <form @submit.prevent="replyToMessage(replyContent, message.id)">
-                    <input v-model="replyContent" type="text" placeholder="Reply" />
+                  <form @submit.prevent="replyToMessage(message.id)">
+                    <input class="reply-input" v-model="replyContents[message.id]" type="text" placeholder="Reply" />
                     <button type="submit">Send</button>
                   </form>
                 </div>
