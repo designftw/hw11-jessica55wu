@@ -46,9 +46,9 @@ const app = {
       loadingIndicator: false,
       allUsernames: [],
       file: null,
-      profile: null,
       downloadedImages: {},
       replyContents: {},
+      profileFile: null,
     }
   },
 
@@ -121,7 +121,6 @@ const app = {
       immediate: true,
     },
     messages(messages) {
-      // Your code here
       const newImageMessages = messages.filter(
           (message) =>
               message.attachment &&
@@ -144,6 +143,29 @@ const app = {
           }
         }
       });
+
+      // const newImageMessages = messages.filter(
+      //     (message) =>
+      //         message.icon &&
+      //         typeof message.icon === 'object' &&
+      //         message.icon.type === 'Image' &&
+      //         typeof message.icon.magnet === 'string'
+      // );
+      //
+      // newImageMessages.forEach(async (message) => {
+      //   const magnet = message.icon.magnet;
+      //   if (!this.downloadedImages[magnet]) {
+      //     console.log('New image message:', message);
+      //
+      //     try {
+      //       const imageBlob = await this.$gf.media.fetch(magnet);
+      //       const imageUrl = URL.createObjectURL(imageBlob);
+      //       this.downloadedImages[magnet] = imageUrl;
+      //     } catch (error) {
+      //       console.error('Failed to download image:', error);
+      //     }
+      //   }
+      // });
     },
   },
 
@@ -185,11 +207,6 @@ const app = {
     onImageInput(event) {
       this.file = event.target.files[0];
     },
-
-    // onProfileInput(event) {
-    //   this.profile = event.target.files[0];
-    //   // const magnetURI = await this.$gf.media.store(this.profile);
-    // },
 
     async replyToMessage(messageID) {
 
@@ -319,6 +336,12 @@ const Name = {
     return $gf.useObjects([actor])
   },
 
+  mounted() {
+    if (this.profilePicture) {
+      this.fetchProfilePicture(this.profilePicture);
+    }
+  },
+
   computed: {
     profile() {
       return this.objects
@@ -336,16 +359,76 @@ const Name = {
           // Choose the most recent one or null if none exists
           .reduce((prev, curr)=> !prev || curr.published > prev.published? curr : prev, null)
     },
+
+    profilePicture() {
+      const profilePictureObj = this.objects
+          .filter(
+              m =>
+                  m.type &&
+                  m.type == "Profile" &&
+                  m.icon &&
+                  m.icon.type == "Image" &&
+                  m.icon.magnet
+          )
+          .reduce(
+              (prev, curr) =>
+                  !prev || curr.published > prev.published ? curr : prev,
+              null
+          );
+      return profilePictureObj && profilePictureObj.icon ? profilePictureObj.icon.magnet : null;
+    },
   },
 
   data() {
     return {
       editing: false,
-      editText: ''
+      editText: '',
     }
   },
 
   methods: {
+    async fetchProfilePicture(magnet) {
+      if (!this.$parent.downloadedImages[magnet]) {
+        try {
+          const imageBlob = await this.$parent.$gf.media.fetch(magnet);
+          const imageUrl = URL.createObjectURL(imageBlob);
+          this.$parent.downloadedImages[magnet] = imageUrl;
+        } catch (error) {
+          console.error("Failed to download profile picture:", error);
+        }
+      }
+    },
+
+    uploadPicture() {
+      window.alert(this.profileFile)
+    },
+
+    onProfileAttachment(event) {
+      this.profileFile = event.target.files[0];
+    },
+
+    async onProfileInput(event) {
+      if (!this.profileFile) return;
+
+      const message = {
+        type: "Profile",
+      };
+
+      try {
+        const magnetURI = await this.$gf.media.store(this.profileFile);
+        message.icon = {
+          type: "Image",
+          magnet: magnetURI,
+        };
+      } catch (error) {
+        console.error("Failed to upload the image:", error);
+        return;
+      }
+
+      this.$gf.post(message);
+      window.alert('new profile picture posted')
+    },
+
     editName() {
       this.editing = true
       // If we already have a profile,
@@ -413,7 +496,37 @@ const Like = {
   }
 }
 
-app.components = { Name, Like }
+const Read = {
+  props: ["messageId"],
+  template: '#read',
+
+  setup(props) {
+    const $gf = Vue.inject('graffiti');
+    const messageId = Vue.toRef(props, 'messageId');
+    const { objects: readsRaw } = $gf.useObjects([messageId]);
+    return { readsRaw: readsRaw };
+  },
+
+  computed: {
+    reads() {
+      return this.readsRaw.filter(
+          (read) => read.type === 'Read' && read.object === this.messageId
+      );
+    },
+  },
+
+  methods: {
+    markAsRead(messageId) {
+      this.$gf.post({
+        type: 'Read',
+        object: messageId,
+        context: [messageId],
+      });
+    },
+  }
+}
+
+app.components = { Name, Like, Read }
 Vue.createApp(app)
     .use(GraffitiPlugin(Vue))
     .mount('#app')

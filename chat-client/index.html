@@ -44,13 +44,6 @@
             <p v-if="usernameRequestFeedback" class="not-error">{{ usernameRequestFeedback }}</p>
           </div>
 
-          <p>
-            <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
-            <!-- See below for the template. -->
-            <b>Profile Pic:</b> <profile :actor="$gf.me" :editable="true"></profile>
-            <input type="file" accept="image/*" id="profile-upload" name="profile-upload"/> <br>
-            <img class="profile-pic-example" src="profile_pic.png" />
-          </p>
         </div>
 
         <div id="bottom-left-section">
@@ -138,6 +131,11 @@
                 <li>
                   <like :message-id="message.id"></like>
                 </li>
+
+                <li>
+                  <read :message-id="message.id"></read>
+                </li>
+
               </ul>
             </li>
           </ul>
@@ -178,6 +176,25 @@
     <input v-model="editText"/>
     <input type="submit" value="Save Name"/>
   </form>
+
+  <div id="profile">
+      <form v-if="editable" @submit.prevent="onProfileInput">
+          <b>Profile Pic:</b>
+          <input type="file" accept="image/*" id="profile-upload" name="profile-upload" @change="onProfileAttachment" /> <br>
+          <button type="submit" id="profile-upload-button">Upload Picture</button>
+      </form>
+
+<!--      <div v-if="message.icon">-->
+<!--          {{ message.icon }}-->
+<!--      </div>-->
+
+      <div id="profile-pic">
+<!--          <img class="image-files" v-if="profile" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />-->
+          <img class="profile-files" src="default_profile_pic.png">
+<!--          {{ profile.image }}-->
+<!--          <img v-else class="image-files" :src="profile_pic.png">-->
+      </div>
+  </div>
 </template>
 
 <!--<template id="profile">-->
@@ -194,6 +211,12 @@
                 :class="{ 'fas fa-heart': myLikes.length > 0, 'far fa-heart': myLikes.length === 0 }"
         ></i>
     </button>
+</template>
+
+<template id="read">
+    <i>Read</i>
+<!--    <i> Read receipt for {{ messageId }} </i>-->
+<!--    <span class="read-indicator">{{ message.readBy.length }} read</span>-->
 </template>
 
 </body>

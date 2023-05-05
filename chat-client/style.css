@@ -307,6 +307,12 @@ input {
     width: 300px;
 }
 
+.profile-files {
+    width: 60px;
+    height: 55px;
+    border-radius: 100px;
+}
+
 .heart-button {
     background: none;
     border: none;
@@ -318,11 +324,16 @@ input {
 
 .fa {
     font-size: 24px;
+    color:white;
 }
 
 .profile-pic-example {
     width: 50px;
     border-radius:100px;
+}
+
+#profile-pic {
+    padding-top: 10px;
 }
 
 #login-button {
