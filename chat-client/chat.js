@@ -100,7 +100,7 @@ const app = {
           .map((message) => {
             return {
               ...message,
-              liked: 'liked' in message ? message.liked : false,
+              liked: message.liked === true,
             };
           });
     },
@@ -371,26 +371,43 @@ const Name = {
 }
 
 const Like = {
-  props: ["messageid"],
-
+  props: ["messageId"],
   template: '#like',
 
+  setup(props) {
+    const $gf = Vue.inject('graffiti');
+    const messageId = Vue.toRef(props, 'messageId'); // Change this line
+    const { objects: likesRaw } = $gf.useObjects([messageId]);
+    return { likesRaw };
+  },
+
   computed: {
-    isLiked() {
-      const message = this.$root.messages.find((msg) => msg.id === this.messageid);
-      return message && message.liked;
+    likes() {
+      return this.likesRaw.filter(
+          (like) => like.type === 'Like' && like.object === this.messageId
+      );
+    },
+    myLikes() {
+      return this.likes.filter((like) => like.actor === this.$gf.me);
     },
   },
 
   methods: {
-    toggleLike() {
-      const message = this.$root.messages.find((msg) => msg.id === this.messageid);
-      if (message) {
-        message.liked = !message.liked;
+    sendLike() {
+      this.$gf.post({
+        type: 'Like',
+        object: this.messageId,
+        context: [this.messageId],
+      });
+    },
+
+    removeLike() {
+      for (const like of this.myLikes) {
+        this.$gf.remove(like);
       }
     },
-  },
-};
+  }
+}
 
 app.components = { Name, Like }
 Vue.createApp(app)

@@ -307,19 +307,17 @@ input {
     width: 300px;
 }
 
-.heart {
+.heart-button {
+    background: none;
+    border: none;
+    padding: 0;
+    outline: none;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    margin-top:10px;
 }
-.heart path {
-    fill: transparent;
-    stroke: #ffffff;
-    stroke-width: 2px;
-    transition: fill 0.2s ease-in-out;
-}
-.heart.liked path {
-    fill: #ffffff;
+
+.fa {
+    font-size: 24px;
 }
 
 .image-files {

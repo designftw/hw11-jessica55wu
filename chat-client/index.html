@@ -3,6 +3,7 @@
 <head>
   <script type="module" src="./chat.js"></script>
   <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="app">
@@ -135,7 +136,7 @@
                 </div>
 
                 <li>
-                  <like :messageid="message.id"></like>
+                  <like :message-id="message.id"></like>
                 </li>
               </ul>
             </li>
@@ -187,13 +188,12 @@
 <!--</template>-->
 
 <template id="like">
-  <div class="heart" :class="{ liked: isLiked }" @click="toggleLike">
-    <svg viewBox="0 0 32 32">
-      <path
-              d="M16.228 28.787s-9.38-6.52-12.322-10.166c-3.283-4.073-1.364-9.11 3.073-9.41 2.82-.19 5.295 1.778 6.553 4.2 1.257-2.422 3.732-4.39 6.553-4.2 4.437.3 6.355 5.336 3.072 9.41-2.943 3.646-12.322 10.166-12.322 10.166z"
-      ></path>
-    </svg>
-  </div>
+    <button class="heart-button" @click="myLikes.length === 0 ? sendLike() : removeLike()">
+        <i
+                class="fa"
+                :class="{ 'fas fa-heart': myLikes.length > 0, 'far fa-heart': myLikes.length === 0 }"
+        ></i>
+    </button>
 </template>
 
 </body>
