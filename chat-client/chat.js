@@ -143,29 +143,6 @@ const app = {
           }
         }
       });
-
-      // const newImageMessages = messages.filter(
-      //     (message) =>
-      //         message.icon &&
-      //         typeof message.icon === 'object' &&
-      //         message.icon.type === 'Image' &&
-      //         typeof message.icon.magnet === 'string'
-      // );
-      //
-      // newImageMessages.forEach(async (message) => {
-      //   const magnet = message.icon.magnet;
-      //   if (!this.downloadedImages[magnet]) {
-      //     console.log('New image message:', message);
-      //
-      //     try {
-      //       const imageBlob = await this.$gf.media.fetch(magnet);
-      //       const imageUrl = URL.createObjectURL(imageBlob);
-      //       this.downloadedImages[magnet] = imageUrl;
-      //     } catch (error) {
-      //       console.error('Failed to download image:', error);
-      //     }
-      //   }
-      // });
     },
   },
 
@@ -336,46 +313,17 @@ const Name = {
     return $gf.useObjects([actor])
   },
 
-  mounted() {
-    if (this.profilePicture) {
-      this.fetchProfilePicture(this.profilePicture);
-    }
-  },
-
   computed: {
     profile() {
       return this.objects
-          // Filter the raw objects for profile data
-          // https://www.w3.org/TR/activitystreams-vocabulary/#dfn-profile
+          // Filter the raw objects for profile data https://www.w3.org/TR/activitystreams-vocabulary/#dfn-profile
           .filter(m=>
-              // Does the message have a type property?
-              m.type &&
-              // Is the value of that property 'Profile'?
-              m.type=='Profile' &&
-              // Does the message have a name property?
-              m.name &&
-              // Is that property a string?
-              typeof m.name=='string')
+              m.type && // Does the message have a type property?
+              m.type=='Profile' && // Is the value of that property 'Profile'?
+              m.name && // Does the message have a name property?
+              typeof m.name=='string') // Is that property a string?
           // Choose the most recent one or null if none exists
           .reduce((prev, curr)=> !prev || curr.published > prev.published? curr : prev, null)
-    },
-
-    profilePicture() {
-      const profilePictureObj = this.objects
-          .filter(
-              m =>
-                  m.type &&
-                  m.type == "Profile" &&
-                  m.icon &&
-                  m.icon.type == "Image" &&
-                  m.icon.magnet
-          )
-          .reduce(
-              (prev, curr) =>
-                  !prev || curr.published > prev.published ? curr : prev,
-              null
-          );
-      return profilePictureObj && profilePictureObj.icon ? profilePictureObj.icon.magnet : null;
     },
   },
 
@@ -387,70 +335,23 @@ const Name = {
   },
 
   methods: {
-    async fetchProfilePicture(magnet) {
-      if (!this.$parent.downloadedImages[magnet]) {
-        try {
-          const imageBlob = await this.$parent.$gf.media.fetch(magnet);
-          const imageUrl = URL.createObjectURL(imageBlob);
-          this.$parent.downloadedImages[magnet] = imageUrl;
-        } catch (error) {
-          console.error("Failed to download profile picture:", error);
-        }
-      }
-    },
-
-    uploadPicture() {
-      window.alert(this.profileFile)
-    },
-
-    onProfileAttachment(event) {
-      this.profileFile = event.target.files[0];
-    },
-
-    async onProfileInput(event) {
-      if (!this.profileFile) return;
-
-      const message = {
-        type: "Profile",
-      };
-
-      try {
-        const magnetURI = await this.$gf.media.store(this.profileFile);
-        message.icon = {
-          type: "Image",
-          magnet: magnetURI,
-        };
-      } catch (error) {
-        console.error("Failed to upload the image:", error);
-        return;
-      }
-
-      this.$gf.post(message);
-      window.alert('new profile picture posted')
-    },
-
     editName() {
       this.editing = true
-      // If we already have a profile,
-      // initialize the edit text to our existing name
+      // If we already have a profile, initialize the edit text to our existing name
       this.editText = this.profile? this.profile.name : this.editText
     },
 
     saveName() {
       if (this.profile) {
-        // If we already have a profile, just change the name
-        // (this will sync automatically)
+        // If we already have a profile, just change the name (this will sync automatically)
         this.profile.name = this.editText
-      } else {
-        // Otherwise create a profile
+      } else { // Otherwise create a profile
         this.$gf.post({
           type: 'Profile',
           name: this.editText
         })
       }
-
-      // Exit the editing state
-      this.editing = false
+      this.editing = false // Exit the editing state
     }
   },
 
@@ -544,10 +445,99 @@ const ReadReceipts = {
   template: '#read-receipts'
 }
 
-// app.components = { Name, Like, ReadReceipts }
+const MagnetImg = {
+  props: {
+    src: String,
+    loading: {
+      type: String,
+      default: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Loading_icon_cropped.gif'
+    },
+    error: {
+      type: String,
+      default: '' // empty string will trigger broken link
+    }
+  },
+
+  data() {
+    return { fetchedSrc: '' }
+  },
+
+  watch: {
+    src: {
+      async handler(src) {
+        this.fetchedSrc = this.loading
+        try {
+          this.fetchedSrc = await this.$gf.media.fetchURL(src)
+        } catch {
+          this.fetchedSrc = this.error
+        }
+      },
+      immediate: true
+    }
+  },
+
+  template: '<img :src="fetchedSrc"/>'
+}
+
+const ProfilePicture = {
+  props: {
+    actor: { type: String },
+    editable: { type: Boolean, default: false },
+    anonymous: {
+      type: String,
+      default: 'magnet:?xt=urn:btih:58c03e56171ecbe97f865ae9327c79ab3c1d5f16&dn=Anonymous.svg&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com'
+    }
+  },
+
+  setup(props) {
+    // Get a collection of all objects associated with the actor
+    const { actor } = Vue.toRefs(props)
+    const $gf = Vue.inject('graffiti')
+    return $gf.useObjects([actor])
+  },
+
+  computed: {
+    profile() {
+      return this.objects
+          .filter(m=>
+              m.type=='Profile' &&
+              m.icon &&
+              m.icon.type == 'Image' &&
+              typeof m.icon.magnet == 'string')
+          .reduce((prev, curr)=> !prev || curr.published > prev.published? curr : prev, null)
+    }
+  },
+
+  data() {
+    return { file: null }
+  },
+
+  methods: {
+    onPicture(event) {
+      this.file = event.target.files[0]
+    },
+
+    async savePicture() {
+      if (!this.file) return
+
+      this.$gf.post({
+        type: 'Profile',
+        icon: {
+          type: 'Image',
+          magnet: await this.$gf.media.store(this.file)
+        }
+      })
+    },
+  },
+
+  template: '#profile-picture'
+}
+
 Vue.createApp(app)
     .component('name', Name)
     .component('like', Like)
     .component('read-receipts', ReadReceipts)
+    .component('magnet-img', MagnetImg)
+    .component('profile-picture', ProfilePicture)
     .use(GraffitiPlugin(Vue))
     .mount('#app')

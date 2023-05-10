@@ -31,6 +31,7 @@
           <p>
             <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
             <!-- See below for the template. -->
+              <profile-picture :actor="$gf.me" :editable="true"></profile-picture> <br>
             <b>Display Name:</b> <name :actor="$gf.me" :editable="true"></name>
           </p>
 
@@ -49,12 +50,15 @@
         <div id="bottom-left-section">
           <div>
             <h3>Contacts</h3>
-            <div class="usernames">
-              <button v-for="(usernameObj, index) in allUsernames" :key="index" class="username-btn" @click="openPrivateChat(usernameObj.username)">
-              <b><name :actor="usernameObj.actorId" :includeUsername="true"></name></b><br>
-                {{ usernameObj.username }}
-              </button>
-            </div>
+              <div class="usernames">
+                  <div v-for="(usernameObj, index) in allUsernames" :key="index" class="username-item">
+                      <profile-picture :actor="usernameObj.actorId"></profile-picture>
+                      <button class="username-btn" @click="openPrivateChat(usernameObj.username)">
+                          <b><name :actor="usernameObj.actorId" :includeUsername="true"></name></b><br>
+                          {{ usernameObj.username }}
+                      </button>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
@@ -178,25 +182,6 @@
     <input v-model="editText"/>
     <input type="submit" value="Save Name"/>
   </form>
-
-<!--  <div id="profile">-->
-<!--      <form v-if="editable" @submit.prevent="onProfileInput">-->
-<!--          <b>Profile Pic:</b>-->
-<!--          <input type="file" accept="image/*" id="profile-upload" name="profile-upload" @change="onProfileAttachment" /> <br>-->
-<!--          <button type="submit" id="profile-upload-button">Upload Picture</button>-->
-<!--      </form>-->
-
-<!--&lt;!&ndash;      <div v-if="message.icon">&ndash;&gt;-->
-<!--&lt;!&ndash;          {{ message.icon }}&ndash;&gt;-->
-<!--&lt;!&ndash;      </div>&ndash;&gt;-->
-
-<!--      <div id="profile-pic">-->
-<!--&lt;!&ndash;          <img class="image-files" v-if="profile" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />&ndash;&gt;-->
-<!--          <img class="profile-files" src="default_profile_pic.png">-->
-<!--&lt;!&ndash;          {{ profile.image }}&ndash;&gt;-->
-<!--&lt;!&ndash;          <img v-else class="image-files" :src="profile_pic.png">&ndash;&gt;-->
-<!--      </div>-->
-<!--  </div>-->
 </template>
 
 <template id="like">
@@ -208,12 +193,21 @@
     </button>
 </template>
 
+<template id="profile-picture">
+    <magnet-img :src="profile?profile.icon.magnet:anonymous" class="profile-pic"></magnet-img>
+
+    <form v-if="editable" @submit.prevent="savePicture">
+        <input type="file" accept="image/*" @change="onPicture"/>
+        <input type="submit" value="Save Profile Picture"/>
+    </form>
+</template>
+
 <template id="read-receipts">
     <span v-if="readActors && readActors.length > 0">
-        <em>Read</em>
+        <em class="read-label">Read</em>
     </span>
     <span v-else>
-        <em>Delivered</em>
+        <em class="read-label">Delivered</em>
     </span>
 </template>
 

@@ -350,3 +350,28 @@ input {
     color: #655652;
     transform: scale(1.1);
 }
+
+.read-label {
+    font-size: 14px;
+}
+
+.username-item {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+}
+
+.username-item .profile-picture {
+    flex: 0 0;
+}
+
+.username-item .username-btn {
+    flex: 1 0;
+}
+
+.profile-pic {
+    max-width: 40px;
+    border-radius: 100px;
+    margin-left: 15px;
+
+}
