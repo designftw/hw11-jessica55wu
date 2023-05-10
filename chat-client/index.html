@@ -108,7 +108,6 @@
                   </span>
                 </div>
 
-                <!-- Only add these controls if the message is ours -->
                 <!-- You can't edit or delete other people's messages -->
                 <template v-if="message.actor==$gf.me">
                   <li class="edit-delete-buttons">
@@ -132,9 +131,12 @@
                   <like :message-id="message.id"></like>
                 </li>
 
-                <li>
-                  <read :message-id="message.id"></read>
-                </li>
+                <!-- Only add these controls if the message is ours -->
+                <template v-if="message.actor==$gf.me">
+                  <li>
+                    <read-receipts :message-id="message.id"></read-receipts>
+                  </li>
+                </template>
 
               </ul>
             </li>
@@ -177,32 +179,25 @@
     <input type="submit" value="Save Name"/>
   </form>
 
-  <div id="profile">
-      <form v-if="editable" @submit.prevent="onProfileInput">
-          <b>Profile Pic:</b>
-          <input type="file" accept="image/*" id="profile-upload" name="profile-upload" @change="onProfileAttachment" /> <br>
-          <button type="submit" id="profile-upload-button">Upload Picture</button>
-      </form>
+<!--  <div id="profile">-->
+<!--      <form v-if="editable" @submit.prevent="onProfileInput">-->
+<!--          <b>Profile Pic:</b>-->
+<!--          <input type="file" accept="image/*" id="profile-upload" name="profile-upload" @change="onProfileAttachment" /> <br>-->
+<!--          <button type="submit" id="profile-upload-button">Upload Picture</button>-->
+<!--      </form>-->
 
-<!--      <div v-if="message.icon">-->
-<!--          {{ message.icon }}-->
+<!--&lt;!&ndash;      <div v-if="message.icon">&ndash;&gt;-->
+<!--&lt;!&ndash;          {{ message.icon }}&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+
+<!--      <div id="profile-pic">-->
+<!--&lt;!&ndash;          <img class="image-files" v-if="profile" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />&ndash;&gt;-->
+<!--          <img class="profile-files" src="default_profile_pic.png">-->
+<!--&lt;!&ndash;          {{ profile.image }}&ndash;&gt;-->
+<!--&lt;!&ndash;          <img v-else class="image-files" :src="profile_pic.png">&ndash;&gt;-->
 <!--      </div>-->
-
-      <div id="profile-pic">
-<!--          <img class="image-files" v-if="profile" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />-->
-          <img class="profile-files" src="default_profile_pic.png">
-<!--          {{ profile.image }}-->
-<!--          <img v-else class="image-files" :src="profile_pic.png">-->
-      </div>
-  </div>
+<!--  </div>-->
 </template>
-
-<!--<template id="profile">-->
-
-<!--  <input type="file" accept="image/*" id="profile-upload" name="profile-upload" @change="onProfileInput"/> <br>-->
-<!--&lt;!&ndash;  <img class="profile" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />&ndash;&gt;-->
-
-<!--</template>-->
 
 <template id="like">
     <button class="heart-button" @click="myLikes.length === 0 ? sendLike() : removeLike()">
@@ -213,10 +208,13 @@
     </button>
 </template>
 
-<template id="read">
-    <i>Read</i>
-<!--    <i> Read receipt for {{ messageId }} </i>-->
-<!--    <span class="read-indicator">{{ message.readBy.length }} read</span>-->
+<template id="read-receipts">
+    <span v-if="readActors && readActors.length > 0">
+        <em>Read</em>
+    </span>
+    <span v-else>
+        <em>Delivered</em>
+    </span>
 </template>
 
 </body>

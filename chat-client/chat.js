@@ -496,37 +496,58 @@ const Like = {
   }
 }
 
-const Read = {
-  props: ["messageId"],
-  template: '#read',
+const ReadReceipts = {
+  props: ["messageid"],
 
   setup(props) {
-    const $gf = Vue.inject('graffiti');
-    const messageId = Vue.toRef(props, 'messageId');
-    const { objects: readsRaw } = $gf.useObjects([messageId]);
-    return { readsRaw: readsRaw };
+    const $gf = Vue.inject('graffiti')
+    const messageid = Vue.toRef(props, 'messageid')
+    return $gf.useObjects([messageid])
+  },
+
+  async mounted() {
+    if (!(this.readActors.includes(this.$gf.me))) {
+      this.$gf.post({
+        type: 'Read',
+        object: this.messageid,
+        context: [this.messageid]
+      })
+    }
   },
 
   computed: {
     reads() {
-      return this.readsRaw.filter(
-          (read) => read.type === 'Read' && read.object === this.messageId
-      );
+      return this.objects.filter(o=>
+          o.type == 'Read' &&
+          o.object == this.messageid)
     },
+
+    myReads() {
+      return this.reads.filter(r=>r.actor==this.$gf.me)
+    },
+
+    readActors() {
+      return [...new Set(this.reads.map(r=>r.actor))]
+    }
   },
 
-  methods: {
-    markAsRead(messageId) {
-      this.$gf.post({
-        type: 'Read',
-        object: messageId,
-        context: [messageId],
-      });
-    },
-  }
+  watch: {
+    // In case we accidentally "read" more than once.
+    myReads(myReads) {
+      if (myReads.length > 1) {
+        // Remove all but one
+        this.$gf.remove(...myReads.slice(1))
+      }
+    }
+  },
+
+  template: '#read-receipts'
 }
 
-app.components = { Name, Like, Read }
+// app.components = { Name, Like, ReadReceipts }
 Vue.createApp(app)
+    .component('name', Name)
+    .component('like', Like)
+    .component('read-receipts', ReadReceipts)
     .use(GraffitiPlugin(Vue))
     .mount('#app')
