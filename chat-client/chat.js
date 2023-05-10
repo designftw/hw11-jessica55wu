@@ -293,7 +293,9 @@ const app = {
     async fetchAllUsernames() {
       try {
         this.allUsernames = await this.resolver.getAllUsernames();
+        this.allUsernames = allUsernames.filter(usernameObj => usernameObj.actorId !== this.$gf.me); // line is not quite working, needs fixing
         console.log('HERERERER: ', this.allUsernames)
+
       } catch (error) {
         console.error('Error fetching all usernames:', error);
       }
@@ -454,7 +456,7 @@ const MagnetImg = {
     },
     error: {
       type: String,
-      default: '' // empty string will trigger broken link
+      default: 'https://images.nightcafe.studio//assets/profile.png?tr=w-1600,c-at_max' // empty string will trigger broken link
     }
   },
 
@@ -533,11 +535,66 @@ const ProfilePicture = {
   template: '#profile-picture'
 }
 
+const MyProfilePicture = {
+  props: {
+    actor: { type: String },
+    editable: { type: Boolean, default: false },
+    anonymous: {
+      type: String,
+      default: 'magnet:?xt=urn:btih:58c03e56171ecbe97f865ae9327c79ab3c1d5f16&dn=Anonymous.svg&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com'
+    }
+  },
+
+  setup(props) {
+    // Get a collection of all objects associated with the actor
+    const { actor } = Vue.toRefs(props)
+    const $gf = Vue.inject('graffiti')
+    return $gf.useObjects([actor])
+  },
+
+  computed: {
+    profile() {
+      return this.objects
+          .filter(m=>
+              m.type=='Profile' &&
+              m.icon &&
+              m.icon.type == 'Image' &&
+              typeof m.icon.magnet == 'string')
+          .reduce((prev, curr)=> !prev || curr.published > prev.published? curr : prev, null)
+    }
+  },
+
+  data() {
+    return { file: null }
+  },
+
+  methods: {
+    onPicture(event) {
+      this.file = event.target.files[0]
+    },
+
+    async savePicture() {
+      if (!this.file) return
+
+      this.$gf.post({
+        type: 'Profile',
+        icon: {
+          type: 'Image',
+          magnet: await this.$gf.media.store(this.file)
+        }
+      })
+    },
+  },
+
+  template: '#my-profile-picture'
+}
+
 Vue.createApp(app)
     .component('name', Name)
     .component('like', Like)
     .component('read-receipts', ReadReceipts)
     .component('magnet-img', MagnetImg)
     .component('profile-picture', ProfilePicture)
+    .component('my-profile-picture', MyProfilePicture)
     .use(GraffitiPlugin(Vue))
     .mount('#app')

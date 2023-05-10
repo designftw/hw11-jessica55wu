@@ -31,7 +31,7 @@
           <p>
             <!-- We display names in multiple places, so we made a reusable <name></name> component. -->
             <!-- See below for the template. -->
-              <profile-picture :actor="$gf.me" :editable="true"></profile-picture> <br>
+              <my-profile-picture id="my-profile-pic" :actor="$gf.me" :editable="true"></my-profile-picture> <br>
             <b>Display Name:</b> <name :actor="$gf.me" :editable="true"></name>
           </p>
 
@@ -195,6 +195,15 @@
 
 <template id="profile-picture">
     <magnet-img :src="profile?profile.icon.magnet:anonymous" class="profile-pic"></magnet-img>
+
+    <form v-if="editable" @submit.prevent="savePicture">
+        <input type="file" accept="image/*" @change="onPicture"/>
+        <input type="submit" value="Save Profile Picture"/>
+    </form>
+</template>
+
+<template id="my-profile-picture">
+    <magnet-img :src="profile?profile.icon.magnet:anonymous" class="my-profile-pic"></magnet-img>
 
     <form v-if="editable" @submit.prevent="savePicture">
         <input type="file" accept="image/*" @change="onPicture"/>
