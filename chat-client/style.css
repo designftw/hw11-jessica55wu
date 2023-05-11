@@ -355,6 +355,18 @@ input {
     font-size: 14px;
 }
 
+.timestamp {
+    font-size: 13px;
+}
+
+.timestamp-first {
+    padding-top: 5px;
+}
+
+.audio-attachment {
+    padding: 5px 0;
+}
+
 .username-item {
     display: flex;
     align-items: center;
@@ -371,6 +383,7 @@ input {
 
 .profile-pic {
     width: 40px;
+    height: 40px;
     border-radius: 100px;
     margin: 0 0 0 15px;
     padding: 0px;

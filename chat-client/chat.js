@@ -2,6 +2,7 @@ import * as Vue from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 import {mixin} from "https://mavue.mavo.io/mavue.js";
 import GraffitiPlugin from 'https://graffiti.garden/graffiti-js/plugins/vue/plugin.js'
 import Resolver from './resolver.js'
+import { recordAudio } from './audioRecorder.js';
 
 const app = {
   // Import MaVue
@@ -49,6 +50,10 @@ const app = {
       downloadedImages: {},
       replyContents: {},
       profileFile: null,
+      isRecording: false,
+      recordedAudio: null,
+      recordedAudioUrl: null,
+      downloadedAudios: {},
     }
   },
 
@@ -105,6 +110,15 @@ const app = {
             };
           });
     },
+
+    audioMessages() {
+      return this.messages.filter((message) =>
+          message.attachment &&
+          typeof message.attachment === 'object' &&
+          message.attachment.type === 'Audio' &&
+          typeof message.attachment.magnet === 'string'
+      );
+    },
   },
 
   watch: {
@@ -143,12 +157,35 @@ const app = {
           }
         }
       });
+
+      const newAudioMessages = messages.filter(
+          (message) =>
+              message.attachment &&
+              typeof message.attachment === 'object' &&
+              message.attachment.type === 'Audio' &&
+              typeof message.attachment.magnet === 'string'
+      );
+
+      newAudioMessages.forEach(async (message) => {
+        const magnet = message.attachment.magnet;
+        if (!this.downloadedAudios[magnet]) {
+          console.log('New audio message:', message);
+
+          try {
+            const audioBlob = await this.$gf.media.fetch(magnet);
+            const audioUrl = URL.createObjectURL(audioBlob);
+            this.downloadedAudios[magnet] = audioUrl;
+          } catch (error) {
+            console.error('Failed to download audio:', error);
+          }
+        }
+      });
     },
   },
 
   methods: {
     async sendMessage() {
-      if (!this.messageText && !this.file) return;
+      if (!this.messageText && !this.file && !this.recordedAudio) return;
 
       const message = {
         type: 'Note',
@@ -167,6 +204,22 @@ const app = {
           console.error('Failed to upload the image:', error);
           return;
         }
+      } else if (this.recordedAudio) {
+        try {
+          window.alert('sending audio')
+          const magnetURI = await this.$gf.media.store(this.recordedAudio.audioBlob);
+          window.alert(magnetURI)
+          message.attachment = {
+            type: 'Audio',
+            magnet: magnetURI,
+          };
+          message.content = 'attached audio';
+        } catch (error) {
+          console.error('Failed to upload the audio:', error);
+          window.alert('Failed to upload the audio');
+          window.alert(error);
+          return;
+        }
       }
 
       if (this.privateMessaging) {
@@ -179,6 +232,22 @@ const app = {
       this.$gf.post(message)
       this.messageText = '';
       this.file = null;
+      this.recordedAudio = null;
+      this.recordedAudioUrl = null;
+    },
+
+    async toggleRecording() {
+      if (this.isRecording) {
+        this.isRecording = false;
+        this.recordedAudio = await this.recorder.stop();
+        this.recordedAudioUrl = this.recordedAudio.audioUrl;
+        this.recorder = null;
+      } else {
+        this.isRecording = true;
+        this.recorder = new recordAudio();
+        await this.recorder.initialize();
+        this.recorder.start();
+      }
     },
 
     onImageInput(event) {
@@ -588,6 +657,8 @@ const MyProfilePicture = {
 
   template: '#my-profile-picture'
 }
+
+// code for components, not relevant to audio functionality
 
 Vue.createApp(app)
     .component('name', Name)
