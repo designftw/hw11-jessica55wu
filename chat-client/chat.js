@@ -206,9 +206,7 @@ const app = {
         }
       } else if (this.recordedAudio) {
         try {
-          window.alert('sending audio')
           const magnetURI = await this.$gf.media.store(this.recordedAudio.audioBlob);
-          window.alert(magnetURI)
           message.attachment = {
             type: 'Audio',
             magnet: magnetURI,
@@ -316,7 +314,6 @@ const app = {
         await this.resolver.requestUsername(this.usernameInput);
         this.currentUsername = this.usernameInput;
         this.usernameRequestFeedback = 'Username successfully requested!';
-        // window.alert('Username successfully requested!');
       } catch (error) {
         console.error('Error requesting username:', error);
         this.usernameRequestError = 'Failed to request username. Please try again.';

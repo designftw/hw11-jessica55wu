@@ -11,13 +11,11 @@ export class recordAudio {
     }
 
     start() {
-        window.alert('start');
         this.audioChunks.length = 0;
         this.mediaRecorder.start();
     }
 
     stop() {
-        window.alert('stop');
         const promise = new Promise((resolve) => {
             this.mediaRecorder.addEventListener("stop", () => {
                 const audioBlob = new Blob(this.audioChunks);

@@ -7,7 +7,7 @@ html, body {
 body {
     font-family: -apple-system, sans-serif;
     background-color: #F6F6F2;
-    padding: 20px 0px;
+    padding: 20px 0 0 0;
 }
 
 #app {
@@ -56,6 +56,11 @@ h1 {
 
 #top-right-section {
     border-bottom: 2px solid;
+    background-color: #EDE6D8;
+}
+
+div.search-container {
+    padding: 10px;
 }
 
 #right-section {
@@ -77,7 +82,9 @@ h1 {
 #send-message {
     display: flex;
     padding-top:10px;
-    border-top: 1px solid;
+    border-top: 2px solid;
+    background-color: #EDE6D8;
+    padding-bottom: 12px;
 }
 
 #send-message form {
@@ -86,30 +93,40 @@ h1 {
 }
 
 .send-button {
-    background-color: #4CAF50;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
     border: none;
+    outline: none;
+    padding: 0;
     color: white;
-    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 15px;
-    margin: 4px 2px;
+    margin: 4px 10px 8px 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: filter 0.3s ease, color 0.3s ease;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
-.send-button:hover, .send-button:active {
-    background-color: #3e8e41;
-    color: white;
+.send-image-button {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-#send-message input[type="submit"] {
-    margin-left: 10px;
+.send-button:hover .send-image-button {
+    transform: rotate(360deg);
 }
 
 #message-box {
     flex: 1;
+    border-radius: 50px;
+    padding-left: 15px;
 }
 
 .edit-name-button {
@@ -164,6 +181,12 @@ input {
     padding-left: 0;
 }
 
+.message-list {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 12px;
+}
+
 .message-item {
     padding: 12px 20px;
     background-color: rgba(0, 0, 0, 0.08);
@@ -192,15 +215,15 @@ input {
 }
 
 .message-item.me {
-    background-color: #0078ff;
+    background-color: #BF9166;
     color: #ffffff;
     margin-left: auto;
     border-bottom-right-radius: 0;
 }
 
 .message-item.other {
-    background-color: #d5d5d5;
-    color: #000000;
+    background-color: #34110A;
+    color: #F6F6F2;
     margin-right: auto;
     border-bottom-left-radius: 0;
 }
@@ -300,7 +323,12 @@ input {
 }
 
 #recipient-username {
-    margin: 0px 1px 0px 5px;
+    margin: 0px 3px 0px 5px;
+    width: 70%;
+    border-radius: 25px;
+    padding-left: 15px;
+    height: 30px;
+    border-width: 1px;
 }
 
 .image-files {
@@ -337,17 +365,17 @@ input {
 }
 
 #login-button {
-    background-color: #655652;
+    background-color: #5A1D10;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
 
 #login-button:hover {
-    background-color: white;
-    color: #655652;
+    filter: invert(1);
     transform: scale(1.1);
 }
 
@@ -394,4 +422,31 @@ input {
     border-radius: 100px;
     margin: 0 0 10px 15px;
     padding: 0px;
+}
+
+.record-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+}
+
+.record-button img {
+    height: 25px;
+    mix-blend-mode: multiply;
+}
+
+#image-upload {
+    padding: 0 10px;
+    width: auto;
+
+}
+
+#username-search {
+    height: 35px;
+    margin: 0 10px;
+    padding: 0 15px;
+    border-width: 1.5px;
+    border-radius: 20px;
 }

@@ -68,11 +68,10 @@
           <form @submit.prevent="searchByUsername">
             <div class="search-container">
               <label for="recipient-username">
-                Chat with:
+                <b>Chat with:</b>
               </label>
               <input id="recipient-username" v-model="searchedUsername" placeholder="Enter a username" />
-              <button type="submit">Search</button>
-<!--              <p v-if="loadingIndicator" class="loading">Searching...</p>-->
+              <button id="username-search" type="submit">Search</button>
               <span v-if="loadingIndicator" class="loader"></span>
             </div>
           </form>
@@ -113,12 +112,12 @@
                 </li>
 
                 <!-- You can't edit or delete other people's messages -->
-                <template v-if="message.actor==$gf.me && !message.attachment">
+                <template v-if="message.actor==$gf.me">
                   <li class="edit-delete-buttons">
                     <button @click="removeMessage(message)">
                       Delete Message
                     </button>
-                    <button @click="startEditMessage(message)">
+                    <button @click="startEditMessage(message)" v-if="!message.attachment">
                       Edit Message
                     </button>
                   </li>
@@ -158,12 +157,14 @@
             <input type="file" accept="image/*" id="image-upload" name="image-upload" @change="onImageInput"/> <br>
 
               <!-- Added code for audio recording functionality -->
-              <button @click="toggleRecording" class="record-button">
-                  {{ isRecording ? 'Stop Recording' : 'Start Recording' }}
-              </button>
+            <button @click="toggleRecording" class="record-button">
+              <img :src="isRecording ? 'images/stop-mic.png' : 'images/start-mic.png'" alt="Record Button" />
+            </button>
             <audio v-if="recordedAudioUrl" :src="recordedAudioUrl" controls></audio>
 
-            <input type="submit" value="Send" class="send-button" />
+            <button type="submit" class="send-button">
+              <img class="send-image-button" src="images/send.png" alt="Send" />
+            </button>
           </form>
         </div>
 
