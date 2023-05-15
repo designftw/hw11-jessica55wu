@@ -12,6 +12,7 @@ const app = {
   created() {
     this.resolver = new Resolver(this.$gf);
     this.fetchAllUsernames();
+    this.fetchCurrentUsername();
   },
 
   setup() {
@@ -355,12 +356,21 @@ const app = {
     },
 
     async fetchCurrentUsername() {
-      if (this.gf) {
-        try {
-          this.currentUsername = await this.resolver.actorToUsername(this.gf.me());
-        } catch (error) {
-          console.error('Error fetching current username:', error);
-        }
+      // if (this.gf) {
+      //   try {
+      //     this.currentUsername = await this.resolver.actorToUsername(this.gf.me());
+      //     window.alert(this.currentUsername)
+      //   } catch (error) {
+      //     console.error('Error fetching current username:', error);
+      //   }
+      // }
+      console.log('FETCHING USERNAME')
+      try {
+        this.currentUsername = await this.resolver.actorToUsername(this.$gf.me);
+        console.log(`USERNAME: ${this.currentUsername}`)
+      } catch (error) {
+        console.log('error getting current username')
+        console.error('Error fetching current username:', error);
       }
     },
 
