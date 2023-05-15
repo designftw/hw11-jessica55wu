@@ -181,12 +181,6 @@ input {
     padding-left: 0;
 }
 
-.message-list {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    padding-top: 12px;
-}
-
 .message-item {
     padding: 12px 20px;
     background-color: rgba(0, 0, 0, 0.08);
@@ -214,11 +208,29 @@ input {
     margin-bottom: 10px;
 }
 
+.transcript-box {
+    margin-bottom: 0px;
+}
+
 .message-item.me {
     background-color: #BF9166;
     color: #ffffff;
     margin-left: auto;
     border-bottom-right-radius: 0;
+}
+
+.transcript-box {
+    margin-top: 5px;
+    padding: 1px 24px 25px 24px;
+    background-color: #f3e3cf;
+    width: 250px;
+    color: black;
+    margin-left: auto;
+    border-radius: 5px 5px 0 0;
+    font-size: 14px;
+    margin-bottom: -25px;
+    margin-right: 20px;
+    line-height:18px;
 }
 
 .message-item.other {

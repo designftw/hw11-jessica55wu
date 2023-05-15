@@ -81,75 +81,77 @@
         <div id="bottom-right-section">
           <ul class="message-list">
             <!-- List all the messages -->
-            <li v-for="message of messages" :key="message.id" class="message-box">
-              <!-- Otherwise, display a bunch of properties from the message -->
-              <ul class="message-item" :class="{'me': message.actor == $gf.me, 'other': message.actor != $gf.me}">
+            <li v-for="message of messages" :key="message.id">
+              <div v-if="message.attachment && message.attachment.type==='Audio' && message.attachment.transcript !== undefined" class="transcript-box">
+                <p><em>{{ message.attachment.transcript }}</em></p>
+              </div>
+              <div class="message-box">
+                <ul class="message-item" :class="{'me': message.actor == $gf.me, 'other': message.actor != $gf.me}">
 
-                <div v-if="message.inReplyTo">
-                  <span class="replied-to">
-                    <b> Replied to: </b> {{ getMessageSnippet(message.inReplyTo) }}
-                  </span>
-                </div>
-
-                <li>
-                  <div v-if="message.attachment">
-                    <div v-if="message.attachment.type === 'Audio'">
-                      <audio class="audio-attachment" :src="downloadedAudios[message.attachment.magnet]" controls></audio>
-                      <p>{{ message.attachment.transcript }}</p>
-                    </div>
-                    <div v-else>
-                      <img class="image-files" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />
-                    </div>
+                  <div v-if="message.inReplyTo">
+                <span class="replied-to">
+                  <b> Replied to: </b> {{ getMessageSnippet(message.inReplyTo) }}
+                </span>
                   </div>
-                  <div v-else> {{ message.content }} </div>
-                </li>
 
-                <li>
-                  <!-- Display and edit form if we're editing a message -->
-                  <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
-                    <input v-model="editText">
-                    <input type="submit" value="Save"/>
-                  </form>
-                </li>
-
-                <!-- You can't edit or delete other people's messages -->
-                <template v-if="message.actor==$gf.me">
-                  <li class="edit-delete-buttons">
-                    <button @click="removeMessage(message)">
-                      Delete Message
-                    </button>
-                    <button @click="startEditMessage(message)" v-if="!message.attachment">
-                      Edit Message
-                    </button>
-                  </li>
-                </template>
-
-                <div class="reply-form">
-                  <form @submit.prevent="replyToMessage(message.id)">
-                    <input class="reply-input" v-model="replyContents[message.id]" type="text" placeholder="Reply" />
-                    <button type="submit">Send</button>
-                  </form>
-                </div>
-
-                <li class="timestamp timestamp-first"> Published at Time: {{ message.published }} </li>
-                <li class="timestamp"> Last Edited at Time: {{ message.updated }} </li>
-
-                <li>
-                  <like :message-id="message.id"></like>
-                </li>
-
-                <!-- Only add these controls if the message is ours -->
-                <template v-if="message.actor==$gf.me">
                   <li>
-                    <read-receipts :message-id="message.id"></read-receipts>
+                    <div v-if="message.attachment">
+                      <div v-if="message.attachment.type === 'Audio'">
+                        <audio class="audio-attachment" :src="downloadedAudios[message.attachment.magnet]" controls></audio>
+<!--                        <p>{{ message.attachment.transcript }}</p>-->
+                      </div>
+                      <div v-else>
+                        <img class="image-files" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />
+                      </div>
+                    </div>
+                    <div v-else> {{ message.content }} </div>
                   </li>
-                </template>
 
-              </ul>
+                  <li>
+                    <!-- Display and edit form if we're editing a message -->
+                    <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
+                      <input v-model="editText">
+                      <input type="submit" value="Save"/>
+                    </form>
+                  </li>
+
+                  <!-- You can't edit or delete other people's messages -->
+                  <template v-if="message.actor==$gf.me">
+                    <li class="edit-delete-buttons">
+                      <button @click="removeMessage(message)">
+                        Delete Message
+                      </button>
+                      <button @click="startEditMessage(message)" v-if="!message.attachment">
+                        Edit Message
+                      </button>
+                    </li>
+                  </template>
+
+                  <div class="reply-form">
+                    <form @submit.prevent="replyToMessage(message.id)">
+                      <input class="reply-input" v-model="replyContents[message.id]" type="text" placeholder="Reply" />
+                      <button type="submit">Send</button>
+                    </form>
+                  </div>
+
+                  <li class="timestamp timestamp-first"> Published at Time: {{ message.published }} </li>
+                  <li class="timestamp"> Last Edited at Time: {{ message.updated }} </li>
+
+                  <li>
+                    <like :message-id="message.id"></like>
+                  </li>
+
+                  <!-- Only add these controls if the message is ours -->
+                  <template v-if="message.actor==$gf.me">
+                    <li>
+                      <read-receipts :message-id="message.id"></read-receipts>
+                    </li>
+                  </template>
+
+                </ul>
+              </div>
             </li>
           </ul>
-
-          <!-- A form for sending messages -->
         </div>
 
         <div id="send-message">
