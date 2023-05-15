@@ -439,7 +439,9 @@ function transcribeAudio(audioBlob) {
       .catch(error => {
         console.error(error);
         throw error;
-h
+        });
+}
+
 const Name = {
   props: ['actor', 'editable'],
 
