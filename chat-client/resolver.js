@@ -81,6 +81,20 @@ export default class UsernameResolver {
     return allUsernames;
   }
 
+  async getMyUsername(signal = AbortSignal.timeout(500)) {
+    let allUsernames = [];
+    for await (const object of this.gf.objects(this.context, signal)) {
+      if (this.#offerFilter(object)) {
+        allUsernames.push({
+          username: object.object.preferredUsername,
+          actorId: object.actor,
+        });
+      }
+    }
+    allUsernames = allUsernames.filter(usernameObj => usernameObj.actorId === this.gf.me);
+    return allUsernames[0];
+  }
+
   async #resolveOffer(condition, signal) {
     let offer = null
     for await (const object of this.gf.objects(this.context, signal)) {

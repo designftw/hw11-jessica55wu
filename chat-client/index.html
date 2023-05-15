@@ -57,7 +57,7 @@
                   <div v-for="(usernameObj, index) in allUsernames" :key="index" class="username-item">
                       <profile-picture :actor="usernameObj.actorId"></profile-picture>
                       <button class="username-btn" @click="openPrivateChat(usernameObj.username)">
-                          <b><name :actor="usernameObj.actorId" :includeUsername="true"></name></b><br>
+                          <b class="username-title"><name :actor="usernameObj.actorId" :includeUsername="true"></name></b><br>
                           {{ usernameObj.username }}
                       </button>
                   </div>
@@ -152,15 +152,6 @@
 <!--                  <span class="publish-time">Sent {{ message.published }}</span>-->
                   <span class="publish-time">Sent <time>{{ (new Date(message.published)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</time></span>
 
-
-
-                  <!--                  <div class="timestamp-tooltip">-->
-<!--                    <span class="tooltip-text">Published at Time: {{ message.published }}</span>-->
-<!--                  </div>-->
-<!--                  <div class="timestamp-tooltip">-->
-<!--                    <span class="tooltip-text">Last Edited at Time: {{ message.updated }}</span>-->
-<!--                  </div>-->
-
                 </ul>
               </div>
             </li>
@@ -171,9 +162,9 @@
           <form @submit.prevent="sendMessage">
             <input id="message-box" v-model="messageText" placeholder="Type a message..." />
             <input type="file" accept="image/*" id="image-upload" name="image-upload" @change="onImageInput"/> <br>
-
               <!-- Added code for audio recording functionality -->
-            <button @click="toggleRecording" class="record-button">
+            <button v-if="recordedAudioUrl" @click="deleteRecording" class="delete-recording-button" type="button"> X </button>
+            <button v-if="!recordedAudioUrl" @click="toggleRecording" class="record-button" type="button">
               <img :src="isRecording ? 'images/stop-mic.png' : 'images/start-mic.png'" alt="Record Button" />
             </button>
             <audio v-if="recordedAudioUrl" :src="recordedAudioUrl" controls></audio>

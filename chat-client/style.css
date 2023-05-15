@@ -550,3 +550,19 @@ label {
     top: 12px;
     right: 10px;
 }
+
+/*.username-title {*/
+/*    font-family: 'Courier Prime', monospace;*/
+/*    font-weight: 700;*/
+/*    text-transform: uppercase;*/
+/*    font-size: 19px;*/
+/*    line-height: 35px;*/
+/*}*/
+
+.delete-recording-button {
+    padding: 0px 10px;
+    margin: 0px 10px;
+    line-height: 0px;
+    height: 35px;
+    width: 35px;
+}

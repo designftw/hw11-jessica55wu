@@ -275,6 +275,15 @@ const app = {
       }
     },
 
+    deleteRecording() {
+      this.isRecording = false;
+      this.recordedAudio = null;
+      this.recordedAudioUrl = null;
+      console.log("audio deleted");
+      console.log(this.recordedAudioUrl);
+      this.recorder = null;
+    },
+
     onImageInput(event) {
       this.file = event.target.files[0];
     },
@@ -366,11 +375,11 @@ const app = {
       // }
       console.log('FETCHING USERNAME')
       try {
-        this.currentUsername = await this.resolver.actorToUsername(this.$gf.me);
-        console.log(`USERNAME: ${this.currentUsername}`)
+        this.currentUsername = await this.resolver.getMyUsername();
+        this.currentUsername = this.currentUsername.username;
+        console.log(this.currentUsername);
       } catch (error) {
-        console.log('error getting current username')
-        console.error('Error fetching current username:', error);
+        console.error('Error fetching my username:', error)
       }
     },
 
