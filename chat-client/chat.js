@@ -426,7 +426,6 @@ function transcribeAudio(audioBlob) {
   console.log("Sending data to server")
 
   // Make a POST request to your Flask server
-  // fetch('https://apitestkev--jessicawu15.repl.co/recv', {
   return fetch('https://audio-transcription-api.herokuapp.com/recv', {
     method: 'POST',
     body: formData
@@ -440,9 +439,7 @@ function transcribeAudio(audioBlob) {
       .catch(error => {
         console.error(error);
         throw error;
-        });
-}
-
+h
 const Name = {
   props: ['actor', 'editable'],
 

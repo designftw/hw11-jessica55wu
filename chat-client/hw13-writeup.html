@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Exercise 1</title>
+		<link rel="stylesheet" href="writeup.css" />
+	</head>
+	<body>
+
+	<p>
+		The problem my chat app aims to address is that standard audio messaging features are pretty barebones, and
+		users aren't always able to process audio messages quickly, efficiently, or at all, in certain scenarios.
+		From user research, I learned that people had trouble listening to voice messages at certain recurring times,
+		such as in a quiet area (classroom, work, etc.), and that they wanted to be able to process these voice
+		messages more quickly (not have to spend a couple minutes, per se, listening to a particularly long voice
+		message).
+	</p>
+
+	<p>
+		Besides implementing all the standard features of PM (sending text, images, searching contacts, liking
+		messages, etc.), the main design differences are 1) the addition of in-browser audio functionality that allow
+		users to record and send voice messages and 2) the addition of chat transcription technology (via the OpenAI
+		Whisper model). Voice messages that are sent and received are automatically transcribed, so the recipient can
+		use the text to process the message or as a guide to follow along in scenarios where it is difficult to
+		understand the audio message by ear.
+	</p>
+
+	<p>
+		On the backend, this is done through obtaining the user's audio stream, setting up a media recorder to capture
+		the audio in the WebM format, and storing the recorded audio chunks. Similar to the images, this is eventually
+		stored as an audio blob. Upon sending, an API I put up on Heroku is pinged with the audio (since the Graffiti
+		server doesn't support a lot of in-browser audio functionality there isn't proper node package support, so I
+		can't directly ping the OpenAI API). This returns a promise, which then resolves with the transcription.
+	</p>
+
+	<p>
+		Note: I can't directly show my Heroku app code,
+		so I've copied it into a folder here (with private API keys removed) called heroku-code,
+		if that is helpful for evaluation.
+		Thanks!
+	</p>
+
+	</body>
+</html>
