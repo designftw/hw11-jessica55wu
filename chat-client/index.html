@@ -82,7 +82,7 @@
           <ul class="message-list">
             <!-- List all the messages -->
             <li v-for="message of messages" :key="message.id">
-              <div v-if="message.attachment && message.attachment.type==='Audio' && message.attachment.transcript !== undefined" class="transcript-box">
+              <div v-if="message.attachment && message.attachment.type==='Audio' && message.attachment.transcript !== undefined" class="transcript-box" :class="{'me': message.actor == $gf.me, 'other': message.actor != $gf.me}">
                 <p><em>{{ message.attachment.transcript }}</em></p>
               </div>
               <div class="message-box">
@@ -104,7 +104,7 @@
                         <img class="image-files" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />
                       </div>
                     </div>
-                    <div v-else> {{ message.content }} </div>
+                    <div class="message-content" v-else> {{ message.content }} </div>
                   </li>
 
                   <li>
@@ -134,9 +134,6 @@
                     </form>
                   </div>
 
-                  <li class="timestamp timestamp-first"> Published at Time: {{ message.published }} </li>
-                  <li class="timestamp"> Last Edited at Time: {{ message.updated }} </li>
-
                   <li>
                     <like :message-id="message.id"></like>
                   </li>
@@ -148,13 +145,25 @@
                     </li>
                   </template>
 
+<!--                  <span class="publish-time">Sent {{ message.published }}</span>-->
+                  <span class="publish-time">Sent <time>{{ (new Date(message.published)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</time></span>
+
+
+
+                  <!--                  <div class="timestamp-tooltip">-->
+<!--                    <span class="tooltip-text">Published at Time: {{ message.published }}</span>-->
+<!--                  </div>-->
+<!--                  <div class="timestamp-tooltip">-->
+<!--                    <span class="tooltip-text">Last Edited at Time: {{ message.updated }}</span>-->
+<!--                  </div>-->
+
                 </ul>
               </div>
             </li>
           </ul>
         </div>
 
-        <div id="send-message">
+        <div id="send-message" v-if="recipient">
           <form @submit.prevent="sendMessage">
             <input id="message-box" v-model="messageText" placeholder="Type a message..." />
             <input type="file" accept="image/*" id="image-upload" name="image-upload" @change="onImageInput"/> <br>

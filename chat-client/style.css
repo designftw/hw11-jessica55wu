@@ -187,6 +187,11 @@ input {
     margin-bottom: 10px;
     border-radius: 25px;
     width: fit-content;
+    max-width: 500px;
+}
+
+.message-content {
+    word-wrap: break-word;
 }
 
 .message-item li {
@@ -219,25 +224,36 @@ input {
     border-bottom-right-radius: 0;
 }
 
+.message-item.other {
+    background-color: #34110A;
+    color: #F6F6F2;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+}
+
 .transcript-box {
     margin-top: 5px;
     padding: 1px 24px 25px 24px;
     background-color: #f3e3cf;
     width: 250px;
     color: black;
-    margin-left: auto;
     border-radius: 5px 5px 0 0;
     font-size: 14px;
     margin-bottom: -25px;
-    margin-right: 20px;
     line-height:18px;
+    border-style: solid;
+    border-width: 1.2px;
+    border-color: rgba(0, 0, 0, 0.16);
 }
 
-.message-item.other {
-    background-color: #34110A;
-    color: #F6F6F2;
+.transcript-box.me {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.transcript-box.other {
     margin-right: auto;
-    border-bottom-left-radius: 0;
+    margin-left: 20px;
 }
 
 .usernames {
@@ -395,12 +411,45 @@ input {
     font-size: 14px;
 }
 
-.timestamp {
+/*.timestamp {*/
+/*    font-size: 13px;*/
+/*    display: none;*/
+/*}*/
+
+/*.timestamp-first {*/
+/*    padding-top: 5px;*/
+/*}*/
+
+.publish-time time::after {
+    content: attr(datetime);
+    display: none;
+}
+
+.publish-time {
     font-size: 13px;
 }
 
-.timestamp-first {
-    padding-top: 5px;
+.timestamp-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    background-color: #fff;
+    color: #000;
+    text-align: center;
+    padding: 1px 1px;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    /*transform: translateX(-50%);*/
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.message-box:hover .tooltip-text {
+    visibility: visible;
 }
 
 .audio-attachment {
