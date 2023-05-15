@@ -408,7 +408,7 @@ function transcribeAudio(audioBlob) {
 
   // Make a POST request to your Flask server
   // fetch('https://apitestkev--jessicawu15.repl.co/recv', {
-  return fetch('https://huge-pp.herokuapp.com/recv', {
+  return fetch('https://audio-transcription-api.herokuapp.com/recv', {
     method: 'POST',
     body: formData
   })

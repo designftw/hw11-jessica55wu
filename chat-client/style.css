@@ -6,7 +6,7 @@ html, body {
 
 body {
     font-family: -apple-system, sans-serif;
-    background-color: #F6F6F2;
+    background-color: rgba(255, 250, 237, 0.4);
     padding: 20px 0 0 0;
 }
 
@@ -25,9 +25,9 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    padding: 1.5rem 1rem 0rem;
     box-sizing: border-box;
-    border-bottom: 2px solid;
+    border-bottom: 2px solid rgb(52, 17, 10);
 }
 
 #body-section {
@@ -36,12 +36,8 @@ h1 {
     overflow: auto;
 }
 
-/*#body-section > * {*/
-/*    margin: 0px 10px 0px 10px;*/
-/*}*/
-
 #left-section {
-    border-right: 2px solid;
+    border-right: 2px solid rgb(52, 17, 10);
     display: grid;
     grid-template-rows: auto 1fr;
     overflow: auto;
@@ -51,7 +47,7 @@ h1 {
 #top-left-section {
     padding-bottom: 20px;
     padding-left:20px;
-    border-bottom: 2px solid;
+    border-bottom: 2px solid rgb(52, 17, 10);
 }
 
 #top-right-section {
@@ -82,7 +78,7 @@ div.search-container {
 #send-message {
     display: flex;
     padding-top:10px;
-    border-top: 2px solid;
+    border-top: 2px solid rgb(52, 17, 10);
     background-color: #EDE6D8;
     padding-bottom: 12px;
 }
@@ -357,6 +353,11 @@ input {
     padding-left: 15px;
     height: 30px;
     border-width: 1px;
+    font-family: 'Courier Prime', monospace;
+    font-weight: 400;
+    font-size: 16px;
+    padding-top: 3px;
+
 }
 
 .image-files {
@@ -400,6 +401,10 @@ input {
     border: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    font-family: 'Courier Prime', monospace;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 17px;
 }
 
 #login-button:hover {
@@ -483,6 +488,7 @@ input {
     border-radius: 100px;
     margin: 0 0 10px 15px;
     padding: 0px;
+    border: 2px solid #5A1D10;
 }
 
 .record-button {
@@ -510,4 +516,37 @@ input {
     padding: 0 15px;
     border-width: 1.5px;
     border-radius: 20px;
+    font-family: 'Courier Prime', monospace;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 18px;
+    padding-top: 3px;
+    background-color: #5A1D10;
+    color: white;
+}
+
+.title {
+    font-family: 'Courier Prime', monospace;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 40px;
+    color: rgb(0, 0, 0);
+}
+
+label {
+    font-family: 'Courier Prime', monospace;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+#header-bar {
+    position: relative;
+}
+
+#login-button {
+    position: fixed;
+    top: 12px;
+    right: 10px;
 }
