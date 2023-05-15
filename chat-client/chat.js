@@ -209,7 +209,23 @@ const app = {
           const magnetURI = await this.$gf.media.store(this.recordedAudio.audioBlob);
           const audioURL = window.URL.createObjectURL(this.recordedAudio.audioBlob);
 
-          transcribeAudio(this.recordedAudio.audioBlob)
+          console.log('before audio transcription')
+          const audioTranscription = await transcribeAudio(this.recordedAudio.audioBlob)
+            .then(response => response.json()) // Extract the JSON data
+            .then(result => {
+              // Handle the returned JSON data
+              console.log('result: ', result);
+              return result;
+            })
+            .catch(error => {
+              // Handle any errors
+              console.error(error);
+            });
+          console.log('audio transcription: ', audioTranscription);
+          console.log('after audio transcription');
+
+          const audioTranscriptionText = audioTranscription.text;
+          console.log(audioTranscriptionText)
 
           console.log(audioURL)
           console.log("magnetURI")
@@ -217,6 +233,7 @@ const app = {
           message.attachment = {
             type: 'Audio',
             magnet: magnetURI,
+            transcript: audioTranscriptionText
           };
           message.content = 'attached audio';
         } catch (error) {
@@ -391,18 +408,19 @@ function transcribeAudio(audioBlob) {
 
   // Make a POST request to your Flask server
   // fetch('https://apitestkev--jessicawu15.repl.co/recv', {
-  fetch('https://huge-pp.herokuapp.com/recv', {
+  return fetch('https://huge-pp.herokuapp.com/recv', {
     method: 'POST',
     body: formData
   })
       .then(response => {
-        // Handle the response from the server
-        // AUDIO PROMISE HERE
-        console.log(response.json());
+        if (!response.ok) {
+          throw new Error('Request failed with status ' + response.status);
+        }
+        return response; // return entire response object
       })
       .catch(error => {
-        // Handle any errors
         console.error(error);
+        throw error;
         });
 }
 

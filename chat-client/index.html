@@ -95,6 +95,7 @@
                   <div v-if="message.attachment">
                     <div v-if="message.attachment.type === 'Audio'">
                       <audio class="audio-attachment" :src="downloadedAudios[message.attachment.magnet]" controls></audio>
+                      <p>{{ message.attachment.transcript }}</p>
                     </div>
                     <div v-else>
                       <img class="image-files" v-if="downloadedImages[message.attachment.magnet]" :src="downloadedImages[message.attachment.magnet]" :alt="message.content" />
