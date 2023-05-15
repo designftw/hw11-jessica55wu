@@ -207,6 +207,13 @@ const app = {
       } else if (this.recordedAudio) {
         try {
           const magnetURI = await this.$gf.media.store(this.recordedAudio.audioBlob);
+          const audioURL = window.URL.createObjectURL(this.recordedAudio.audioBlob);
+
+          transcribeAudio(this.recordedAudio.audioBlob)
+
+          console.log(audioURL)
+          console.log("magnetURI")
+          console.log(magnetURI);
           message.attachment = {
             type: 'Audio',
             magnet: magnetURI,
@@ -239,6 +246,8 @@ const app = {
         this.isRecording = false;
         this.recordedAudio = await this.recorder.stop();
         this.recordedAudioUrl = this.recordedAudio.audioUrl;
+        console.log("audio done");
+        console.log(this.recordedAudioUrl);
         this.recorder = null;
       } else {
         this.isRecording = true;
@@ -369,6 +378,32 @@ const app = {
 
 
   }
+}
+
+function transcribeAudio(audioBlob) {
+  // Create a FormData object
+  const formData = new FormData();
+
+  // Append the audio blob to the FormData object with a key 'audio'
+  formData.append('audio', audioBlob, 'audio.wav');
+
+  console.log("Sending data to server")
+
+  // Make a POST request to your Flask server
+  // fetch('https://apitestkev--jessicawu15.repl.co/recv', {
+  fetch('https://huge-pp.herokuapp.com/recv', {
+    method: 'POST',
+    body: formData
+  })
+      .then(response => {
+        // Handle the response from the server
+        // AUDIO PROMISE HERE
+        console.log(response.json());
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+        });
 }
 
 const Name = {

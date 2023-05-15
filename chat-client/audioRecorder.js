@@ -2,7 +2,9 @@ export class recordAudio {
 
     async initialize() {
         const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-        this.mediaRecorder = new MediaRecorder(stream);
+        this.mediaRecorder = new MediaRecorder(stream, {
+            mimeType: "audio/webm"
+        });
         this.audioChunks = [];
 
         this.mediaRecorder.addEventListener("dataavailable", (event) => {
